@@ -13,11 +13,23 @@ AMyCollectableActor::AMyCollectableActor()
 	//Create the (root) component for rendering
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	RootComponent = StaticMesh;
+
+	//Create collision box
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	BoxCollision->SetupAttachment(StaticMesh);
 }
 
 void AMyCollectableActor::Jump(float velocity)
 {
-	StaticMesh->AddImpulse({.0f, .0f, velocity * 500.f});
+	//make shure jump is only executed once
+	if (!IsLaunched) {
+		//Execute jump using the physics system
+		StaticMesh->AddImpulse({ .0f, .0f, velocity * 500.f });
+
+		//Initiate object destruction
+		SetActorTickEnabled(true);
+		IsLaunched = true;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -25,6 +37,22 @@ void AMyCollectableActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//Setup per instance OnComponentOverlap event
+	FScriptDelegate DelegateSubscriber;
+	DelegateSubscriber.BindUFunction(this, "OnComponentBeginOverlap");
+	BoxCollision->OnComponentBeginOverlap.Add(DelegateSubscriber);
+
+	//Ticking is only required after launching 
+	SetActorTickEnabled(false);
+}
+
+void AMyCollectableActor::OnComponentBeginOverlap(class UBoxComponent* Component, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+
+	if (!IsLaunched && OtherActor->IsA(TriggerClass))
+	{
+		OnJumpTrigger.Broadcast(OtherActor, Component);
+	}
 }
 
 // Called every frame
@@ -32,5 +60,18 @@ void AMyCollectableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+	if (IsLaunched)
+	{
+		//Decrement lifetime
+		LiveTime -= DeltaTime;
+
+		//Check actor destruction
+		if (LiveTime <= 0.0f)
+		{
+			Destroy();
+		}
+
+	}
 }
 
