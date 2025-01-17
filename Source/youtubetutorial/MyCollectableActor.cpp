@@ -48,7 +48,7 @@ void AMyCollectableActor::BeginPlay()
 
 void AMyCollectableActor::OnComponentBeginOverlap(class UBoxComponent* Component, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	
 	if (!IsLaunched && OtherActor->IsA(TriggerClass))
 	{
 		OnJumpTrigger.Broadcast(OtherActor, Component);
