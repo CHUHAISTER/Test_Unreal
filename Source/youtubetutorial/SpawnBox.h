@@ -59,7 +59,7 @@ private:
 
 	//Indicate that the actor should spawn actors
 	UPROPERTY(EditAnywhere)
-	bool ShouldSpawn = false;
+	bool ShouldSpawn = true;
 
 	//helper for timing
 	FTimerHandle SpawnTimerHandle;
