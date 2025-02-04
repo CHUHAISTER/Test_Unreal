@@ -3,22 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 
 #include "Engine/StaticMesh.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 
-#include "XPPawn.generated.h"
+#include "XPCharacter.generated.h"
 
 UCLASS()
-class YOUTUBETUTORIAL_API AXPPawn : public APawn
+class YOUTUBETUTORIAL_API AXPCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	AXPPawn();
+	// Sets default values for this character's properties
+	AXPCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,6 +30,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 
 private:
 

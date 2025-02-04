@@ -7,7 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/DefaultPawn.h"
 
-#include "XPPawn.h"
+#include "XPCharacter.h"
 
 #include "youtubetutorialGameModeBase.generated.h"
 
@@ -25,5 +25,5 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, NoClear)
-	TSubclassOf<AXPPawn> CustomXPPawnClass = AXPPawn::StaticClass();
+	TSubclassOf<AXPCharacter> CustomXPCharacterClass = AXPCharacter::StaticClass();
 };
